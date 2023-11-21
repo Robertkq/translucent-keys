@@ -29,7 +29,39 @@ void Server::OnClientUnvalidated(connection<messageType>* client)
 
 void Server::OnMessage(connection<messageType>* client, message<messageType>& msg) 
 {
+	switch (msg.getID())
+	{
+	case(messageType::targetConnected):
+	{
+		targets.push_back(client);
+		break;
+	}
+	case(messageType::targetDisconnected):
+	{
+		targets.erase(std::find(targets.begin(), targets.end(), client));
+		break;
+	}
+	case(messageType::clientConnected):
+	{
+		clients.push_back(client);
+		break;
+	}
+	case(messageType::clientDisconnected):
+	{
+		clients.erase(std::find(clients.begin(), clients.end(), client));
+		break;
+	}
+	case(messageType::targetTyped):
+	{
+		for (auto client : clients)
+		{
+			client->Send(msg);
+		}
+		break;
+	}
+		
 
+	}
 }
 
 

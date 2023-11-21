@@ -15,5 +15,6 @@ public:
 	void OnClientUnvalidated(kq::connection<messageType>* client) override;
 	void OnMessage(kq::connection<messageType>* client, kq::message<messageType>& msg) override;
 private:
-
+	std::vector<kq::connection<messageType>*> targets;
+	std::vector<kq::connection<messageType>*> clients;
 };
