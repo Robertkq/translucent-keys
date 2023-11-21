@@ -4,9 +4,11 @@
 
 enum class messageType : uint8_t
 {
-	connected,
-	disconnected,
-	realTimeUpdate
+    targetConnected,
+    targetDisconnected,
+    clientConnected,
+    clientDisconnected,
+    targetTyped
 };
 
 inline uint64_t validation_function(uint64_t input)
