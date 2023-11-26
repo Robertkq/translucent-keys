@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+inline const char* server_ip = "192.168.1.4";
+inline uint16_t server_port = 60000;
+
 enum class messageType : uint8_t
 {
     targetConnected,
