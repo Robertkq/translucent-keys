@@ -4,7 +4,7 @@ int main()
 {
 	Client client(&validation_function);
 	std::cout << "Connecting to server...\n";
-	if (!client.Connect("86.125.231.183", 60000))
+	if (!client.Connect("86.120.175.40", 60000))
 	{
 		std::cout << "Failed connecting to server!\n";
 		return 1;

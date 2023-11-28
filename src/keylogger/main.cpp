@@ -1,4 +1,6 @@
 #include "keylogger.h"
+#include "kqnet.h"
+#include "common.h"
 
 int main() {
 

