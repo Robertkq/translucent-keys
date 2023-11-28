@@ -29,7 +29,45 @@ void Server::OnClientUnvalidated(connection<messageType>* client)
 
 void Server::OnMessage(connection<messageType>* client, message<messageType>& msg) 
 {
+	switch (msg.getID())
+	{
+	case(messageType::targetConnected):
+	{
+		std::cout << "Registered target!";
+		targets.push_back(client);
+		break;
+	}
+	case(messageType::targetDisconnected):
+	{
+		std::cout << "Unregistered target!";
+		targets.erase(std::find(targets.begin(), targets.end(), client));
+		break;
+	}
+	case(messageType::clientConnected):
+	{
+		std::cout << "Registered client!";
+		clients.push_back(client);
+		break;
+	}
+	case(messageType::clientDisconnected):
+	{
+		std::cout << "Unregistered client!";
+		clients.erase(std::find(clients.begin(), clients.end(), client));
+		break;
+	}
+	case(messageType::targetTyped):
+	{
+		std::cout << "\nI reforwarded something! ";
+		for (auto client : clients)
+		{
+			std::cout << "To this, ";
+			client->Send(msg);
+		}
+		break;
+	}
+		
 
+	}
 }
 
 
