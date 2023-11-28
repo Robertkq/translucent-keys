@@ -2,11 +2,16 @@
 
 #include <cstdint>
 
+inline const char* server_ip = "192.168.1.4";
+inline uint16_t server_port = 60000;
+
 enum class messageType : uint8_t
 {
-	connected,
-	disconnected,
-	realTimeUpdate
+    targetConnected,
+    targetDisconnected,
+    clientConnected,
+    clientDisconnected,
+    targetTyped
 };
 
 inline uint64_t validation_function(uint64_t input)
