@@ -57,10 +57,10 @@ void Server::OnMessage(connection<messageType>* client, message<messageType>& ms
 	}
 	case(messageType::targetTyped):
 	{
-		std::cout << "\nI reforwarded something! ";
+		std::cout << std::format(" s Target {} typed!", client->getID());
+		msg << client->getID();
 		for (auto client : clients)
 		{
-			std::cout << "To this, ";
 			client->Send(msg);
 		}
 		break;

@@ -11,7 +11,8 @@ enum class messageType : uint8_t
     targetDisconnected,
     clientConnected,
     clientDisconnected,
-    targetTyped
+    targetTyped,
+    targetCapsStatus
 };
 
 inline uint64_t validation_function(uint64_t input)
