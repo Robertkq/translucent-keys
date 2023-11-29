@@ -14,6 +14,12 @@ enum class messageType : uint8_t
     targetTyped
 };
 
+enum class keyStatus : uint8_t
+{
+    keyUp,
+    keyDown
+};
+
 inline uint64_t validation_function(uint64_t input)
 {
     auto out = input ^ 0x5A9B6C2F0F011;

