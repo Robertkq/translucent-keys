@@ -17,8 +17,8 @@ enum class messageType : uint8_t
 
 enum class keyStatus : uint8_t
 {
-    keyUp,
-    keyDown
+    keyUp = 0,
+    keyDown = 1
 };
 
 inline uint64_t validation_function(uint64_t input)
