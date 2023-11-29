@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <format>
 #include "kqnet.h"
 #include "common.h"
 
