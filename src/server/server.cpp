@@ -57,7 +57,7 @@ void Server::OnMessage(connection<messageType>* client, message<messageType>& ms
 	}
 	case(messageType::targetTyped):
 	{
-		std::cout << std::format(" s Target {} typed!", client->getID());
+		/*std::cout << std::format(" s Target {} typed!", client->getID());*/
 		msg << client->getID();
 		for (auto client : clients)
 		{
