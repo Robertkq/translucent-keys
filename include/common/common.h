@@ -2,8 +2,11 @@
 
 #include <cstdint>
 
-inline const char* server_ip = "192.168.1.4";
-inline uint16_t server_port = 60000;
+constexpr const char* server_ip = "192.168.1.4";
+constexpr uint16_t server_port = 60000;
+
+constexpr uint32_t widthUI = 1920;
+constexpr uint32_t heightUI = 1080;
 
 enum class messageType : uint8_t
 {
