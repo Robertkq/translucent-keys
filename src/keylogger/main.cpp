@@ -15,8 +15,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   
 
     EnumWindows(EnumWindowsProc, 0);
-    bool result = transKeys.client.Connect(server_ip, server_port);
-    std::cout << result;
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
