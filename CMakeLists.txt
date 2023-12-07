@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(translucent-keys)
 
+file(TO_CMAKE_PATH "$ENV{KQLOG_LIBRARY_PATH}" KQLOG_PATH )
+file(TO_CMAKE_PATH "$ENV{KQNET_LIBRARY_PATH}" KQNET_PATH )
+file(TO_CMAKE_PATH "$ENV{IMGUI_LIBRARY_PATH}" IMGUI_PATH )
+
+message(STATUS "KQLOG_PATH: ${KQLOG_PATH}")
+message(STATUS "KQNET_PATH: ${KQNET_PATH}")
+message(STATUS "IMGUI_PATH: ${IMGUI_PATH}")
+
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,19 +27,25 @@ file(GLOB_RECURSE KEYBOARD_MANAGER_SOURCE_FILES "src/keyboardManager/*.cpp")
 
 file(GLOB_RECURSE COMMON_HEADER_FILES "include/common/*.h")
 
-file(GLOB_RECURSE KQNET_HEADER_FILES "dependencies/kqnet/*.h*")
-file(GLOB_RECURSE KQLOG_HEADER_FILES "dependencies/kqlog/*.h*")
+file(GLOB_RECURSE KQNET_HEADER_FILES "${KQNET_PATH}/*.h*")
+file(GLOB_RECURSE KQLOG_HEADER_FILES "${KQLOG_PATH}/*.h*")
 
 set(IMGUI_SOURCE_FILES
-"dependencies/imgui/imgui.cpp"
-"dependencies/imgui/imgui_draw.cpp"
-"dependencies/imgui/imgui_tables.cpp"
-"dependencies/imgui/imgui_widgets.cpp"
+"${IMGUI_PATH}/imgui.cpp"
+"${IMGUI_PATH}/imgui_draw.cpp"
+"${IMGUI_PATH}/imgui_tables.cpp"
+"${IMGUI_PATH}/imgui_widgets.cpp"
+"${IMGUI_PATH}/backends/imgui_impl_win32.cpp"
+"${IMGUI_PATH}/backends/imgui_impl_dx11.cpp"
+"src/common/imgui_init.cpp"
 )
 set(IMGUI_HEADER_FILES 
-"dependencies/imgui/imconfig.h"
-"dependencies/imgui/imgui_internal.h"
-"dependencies/imgui/imgui.h"
+"${IMGUI_PATH}/imconfig.h"
+"${IMGUI_PATH}/imgui_internal.h"
+"${IMGUI_PATH}/imgui.h"
+"${IMGUI_PATH}/backends/imgui_impl_win32.h"
+"${IMGUI_PATH}/backends/imgui_impl_dx11.h"
+"include/common/imgui_init.h"
 )
 
 add_executable(keylogger ${KEYLOGGER_SOURCE_FILES}  ${KEYLOGGER_HEADER_FILES}   ${COMMON_HEADER_FILES})
@@ -40,20 +54,23 @@ add_executable(client ${CLIENT_SOURCE_FILES}        ${CLIENT_HEADER_FILES}      
 
 add_library(kqnet INTERFACE ${KQNET_HEADER_FILES})
 target_include_directories(kqnet INTERFACE 
-dependencies/kqnet/include/
-dependencies/kqnet/include/kqlib/include/
-dependencies/kqnet/include/asio/asio/include
+${KQNET_PATH}/include/
+${KQNET_PATH}/include/kqlib/include/
+${KQNET_PATH}/include/asio/asio/include
 )
 
 add_library(kqlog INTERFACE ${KQLOG_HEADER_FILES})
 target_include_directories(kqlog INTERFACE
-dependencies/kqlog/include
-dependencies/kqlog/vendor/magic_enum/include
-dependencies/kqlog/vendor/fmt/include
+${KQLOG_PATH}/include
+${KQLOG_PATH}/vendor/magic_enum/include
+${KQLOG_PATH}/vendor/fmt/include
 )
 
-add_library(imgui_lib STATIC ${IMGUI_SOURCE_FILES} ${IMGUI_HEADER_FILES})
-target_include_directories(imgui_lib PUBLIC dependencies/imgui/)
+add_library(imgui STATIC ${IMGUI_SOURCE_FILES} ${IMGUI_HEADER_FILES})
+target_include_directories(imgui PUBLIC ${IMGUI_PATH}/)
+target_include_directories(imgui PUBLIC ${IMGUI_PATH}/backends/)
+target_include_directories(imgui PUBLIC include/common/)
+target_link_libraries(imgui PUBLIC d3d11)
 
 target_include_directories(keylogger PUBLIC include/keylogger/)
 target_include_directories(keylogger PUBLIC include/common/)
@@ -75,8 +92,8 @@ target_link_libraries(server PUBLIC kqlog)
 target_link_libraries(client PUBLIC kqnet)
 target_link_libraries(client PUBLIC kqlog)
 
-target_link_libraries(client PUBLIC imgui_lib)
-target_link_libraries(server PUBLIC imgui_lib)
+target_link_libraries(client PUBLIC imgui)
+target_link_libraries(server PUBLIC imgui)
 
 # Set the output directory for the executables
 set_target_properties(keylogger PROPERTIES
