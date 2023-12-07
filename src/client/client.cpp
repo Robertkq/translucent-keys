@@ -1,15 +1,12 @@
 #include "client.h"
 
-client::client(uint64_t(*scrambleFunc)(uint64_t), bool useUI)
+client::client(uint64_t(*scrambleFunc)(uint64_t))
     : kq::client_interface<messageType>(scrambleFunc),
 	logger("client_output.txt", "./"),
 	networkingThread(&client::networkInitAndLoop, this), networkLoop(true),
-	ui((useUI == true) ? new clientUI() : nullptr)
+	ui(new clientUI)
 {
-	if(ui)
-	{
-		ui->run();
-	}
+	ui->run();
 }
 
 client::~client()
@@ -20,6 +17,8 @@ client::~client()
 	kq::message<messageType> msg(messageType::clientDisconnected);
 	Send(msg);
 	Disconnect();
+
+	delete ui;
 }
 
 

@@ -4,13 +4,10 @@
 
 int main()
 {
-	client Client(&validation_function, true);
+	client Client(&validation_function);
 	
 
-	while (true)
-	{
-		
-	}
+	Client.run();
 
 
 

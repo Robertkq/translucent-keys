@@ -45,6 +45,7 @@ set(IMGUI_HEADER_FILES
 "${IMGUI_PATH}/imgui.h"
 "${IMGUI_PATH}/backends/imgui_impl_win32.h"
 "${IMGUI_PATH}/backends/imgui_impl_dx11.h"
+"include/common/imgui_init.h"
 )
 
 add_executable(keylogger ${KEYLOGGER_SOURCE_FILES}  ${KEYLOGGER_HEADER_FILES}   ${COMMON_HEADER_FILES})
@@ -69,6 +70,7 @@ add_library(imgui STATIC ${IMGUI_SOURCE_FILES} ${IMGUI_HEADER_FILES})
 target_include_directories(imgui PUBLIC ${IMGUI_PATH}/)
 target_include_directories(imgui PUBLIC ${IMGUI_PATH}/backends/)
 target_include_directories(imgui PUBLIC include/common/)
+target_link_libraries(imgui PUBLIC d3d11)
 
 target_include_directories(keylogger PUBLIC include/keylogger/)
 target_include_directories(keylogger PUBLIC include/common/)

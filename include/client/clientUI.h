@@ -5,6 +5,9 @@
 #include "imgui_init.h"
 #include "keyboardUI.h"
 
+constexpr uint32_t windowWidth = 1920;
+constexpr uint32_t windowHeight = 1080;
+
 class clientUI
 {
 public:
@@ -13,14 +16,18 @@ public:
 	
 	void run();
 
-    inline bool isInitialized() const { return initialized == true; }
+    bool isInitialized() const { return initialized == true; }
+    bool isRunning() const { return done == true; }
 
 private:
+    void initUI();
     void loopUI();
+    void cleanUI();
+    void initLoopClean();
 
 private:
     bool initialized;
-    std::thread threadUI;
+    bool done;
 	std::vector<keyboardUI*> keyUIs;
 private: // bloat stuff
     WNDCLASSEXW wc;
