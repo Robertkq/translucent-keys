@@ -35,25 +35,16 @@ set(IMGUI_SOURCE_FILES
 "${IMGUI_PATH}/imgui_draw.cpp"
 "${IMGUI_PATH}/imgui_tables.cpp"
 "${IMGUI_PATH}/imgui_widgets.cpp"
+"${IMGUI_PATH}/backends/imgui_impl_win32.cpp"
+"${IMGUI_PATH}/backends/imgui_impl_dx11.cpp"
+"src/common/imgui_init.cpp"
 )
 set(IMGUI_HEADER_FILES 
 "${IMGUI_PATH}/imconfig.h"
 "${IMGUI_PATH}/imgui_internal.h"
 "${IMGUI_PATH}/imgui.h"
-)
-
-# TODO: add the backend files too for imgui
-set(IMGUI_SOURCE_FILES
-    "${IMGUI_PATH}/imgui.cpp"
-    "${IMGUI_PATH}/imgui_draw.cpp"
-    "${IMGUI_PATH}/imgui_tables.cpp"
-    "${IMGUI_PATH}/imgui_widgets.cpp"
-)
-
-set(IMGUI_HEADER_FILES
-    "${IMGUI_PATH}/imconfig.h"
-    "${IMGUI_PATH}/imgui_internal.h"
-    "${IMGUI_PATH}/imgui.h"
+"${IMGUI_PATH}/backends/imgui_impl_win32.h"
+"${IMGUI_PATH}/backends/imgui_impl_dx11.h"
 )
 
 add_executable(keylogger ${KEYLOGGER_SOURCE_FILES}  ${KEYLOGGER_HEADER_FILES}   ${COMMON_HEADER_FILES})
@@ -76,6 +67,8 @@ ${KQLOG_PATH}/vendor/fmt/include
 
 add_library(imgui STATIC ${IMGUI_SOURCE_FILES} ${IMGUI_HEADER_FILES})
 target_include_directories(imgui PUBLIC ${IMGUI_PATH}/)
+target_include_directories(imgui PUBLIC ${IMGUI_PATH}/backends/)
+target_include_directories(imgui PUBLIC include/common/)
 
 target_include_directories(keylogger PUBLIC include/keylogger/)
 target_include_directories(keylogger PUBLIC include/common/)

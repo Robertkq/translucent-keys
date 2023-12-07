@@ -4,7 +4,7 @@
 
 int main()
 {
-	Client client(&validation_function);
+	client Client(&validation_function, true);
 	
 
 	while (true)
