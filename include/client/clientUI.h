@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <thread>
+#include <utility>
 #include "imgui_init.h"
 #include "keyboardUI.h"
 
@@ -25,10 +26,13 @@ private:
     void cleanUI();
     void initLoopClean();
 
+    void showConnections() {}
+    void showKeyboardOf() {}
+
 private:
     bool initialized;
     bool done;
-	std::vector<keyboardUI*> keyUIs;
+	std::vector<std::pair<uint32_t, keyboardUI*>> keys;
 private: // bloat stuff
     WNDCLASSEXW wc;
     HWND hwnd;

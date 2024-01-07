@@ -1,7 +1,7 @@
 #include "clientUI.h"
 
 clientUI::clientUI()
-    : initialized(false), done(false),
+    : initialized(false), done(false), keys(),
     wc(),
     hwnd()
 {
@@ -83,13 +83,9 @@ void clientUI::loopUI()
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
-        ImGui::Begin("Hello, world!");
-
-        ImGui::Text("This is some useful text.");
-
-        ImGui::End();
+        
+        showConnections();
+        showKeyboardOf();
 
 
         // Rendering

@@ -48,6 +48,9 @@ void Server::OnMessage(connection<messageType>* client, message<messageType>& ms
 	{
 		logger.out(KQINFO, { "Registered [{}, {}] as client!\n", ipToStr(client->getIP()), client->getID() });
 		clients.push_back(client);
+		uint32_t lol;
+		msg >> lol;
+		logger.out(KQINFO, {"lol: {}", lol});
 		break;
 	}
 	case(messageType::clientDisconnected):

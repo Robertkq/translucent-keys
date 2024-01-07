@@ -15,7 +15,8 @@ enum class messageType : uint8_t
     clientConnected,
     clientDisconnected,
     targetTyped,
-    targetCapsStatus
+    targetCapsStatus,
+    newConnection
 };
 
 enum class keyStatus : uint8_t

