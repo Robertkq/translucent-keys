@@ -34,8 +34,18 @@ void Server::OnMessage(connection<messageType>* client, message<messageType>& ms
 	{
 	case(messageType::targetConnected):
 	{
-		logger.out(KQINFO, { "Registered [{}, {}] as target!\n", ipToStr(client->getIP()), client->getID() });
+		
 		targets.push_back(client);
+		std::string name;
+		uint32_t size;
+		msg >> size;
+		for(uint32_t i = 0; i < size; ++i)
+		{
+			char c;
+			msg >> c;
+			name.insert(name.begin(), c);
+		}
+		logger.out(KQINFO, { "Registered [{}, {}, {}] as target!\n", ipToStr(client->getIP()), client->getID(), name });
 		break;
 	}
 	case(messageType::targetDisconnected):

