@@ -3,7 +3,7 @@
 #include <cstdint>
 
 
-constexpr const char* server_ip = "192.168.1.4";
+constexpr const char* server_ip = "localhost";
 constexpr uint16_t server_port = 60000;
 
 constexpr uint32_t widthUI = 1920;
