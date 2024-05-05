@@ -1,30 +1,27 @@
 #pragma once
 
 #include <iostream>
+#include <mutex>
 #include <thread>
-#include "kqnet.h"
-#include "kqlog.h"
-#include "clientUI.h"
-#include "common.h"
+#include <unordered_map>
 
-class client : public kq::client_interface<messageType>
-{
-public:
-    client(uint64_t(*scrambleFunc)(uint64_t));
+#include "common.h"
+#include "kqnet.h"
+
+class client : public kq::client_interface<messageType> {
+  public:
+    client(uint64_t (*scrambleFunc)(uint64_t));
     ~client();
 
-    bool isUIRunning() const { return ui->isRunning(); }
-    void run()
-    {
-        ui->run();
-    }
-
+    void run();
+    void print_storage();
     void networkInitAndLoop();
-private:
-    kq::logger<kq::default_symbols> logger;
+
+  private:
     std::thread networkingThread;
     bool networkLoop;
 
-    clientUI* ui;
-
+    std::unordered_map<uint32_t, std::vector<char>> keyMap;
+    std::mutex keyMapMutex;
+    std::unordered_map<uint32_t, std::string> nameMap;
 };

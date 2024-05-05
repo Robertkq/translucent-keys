@@ -1,12 +1,11 @@
 #pragma once
 
+#include "imgui_init.h"
 #include <iostream>
 #include <thread>
-#include "imgui_init.h"
-class keyboardUI
-{
-public:
+
+class keyboardUI {
+  public:
     keyboardUI();
     ~keyboardUI();
-
 };
