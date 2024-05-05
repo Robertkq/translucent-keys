@@ -1,7 +1,6 @@
 #include "nameTaker.h"
 
-std::string windowsName()
-{
+std::string windowsName() {
     char buffer[MAX_COMPUTERNAME_LENGTH + 1];
     DWORD size = sizeof(buffer);
     GetComputerNameA(buffer, &size);

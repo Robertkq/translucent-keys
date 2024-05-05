@@ -1,11 +1,11 @@
 #pragma once
 
-#include <array>
-#include <Windows.h>
 #include "common.h"
+#include <Windows.h>
+#include <array>
 
-enum class toggleKeys : uint8_t
-{
+
+enum class toggleKeys : uint8_t {
     caps,
     scrollLock,
     numLock,
@@ -13,9 +13,8 @@ enum class toggleKeys : uint8_t
     toggleKeysCount // keep last in this enum
 };
 
-class keyboardManager
-{
-public:
+class keyboardManager {
+  public:
     keyboardManager();
     ~keyboardManager();
 
@@ -24,10 +23,11 @@ public:
 
     keyStatus getKey(DWORD virtualKeyCode);
 
-private:
+  private:
     toggleKeys toggleConvert(DWORD virtualKeyCode);
 
-private:
+  private:
     std::array<keyStatus, 256> keys;
-    std::array<keyStatus, static_cast<uint8_t>(toggleKeys::toggleKeysCount)> toggles;
+    std::array<keyStatus, static_cast<uint8_t>(toggleKeys::toggleKeysCount)>
+        toggles;
 };

