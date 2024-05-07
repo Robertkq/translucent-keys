@@ -17,6 +17,20 @@ class client : public kq::client_interface<messageType> {
     void print_storage();
     void networkInitAndLoop();
 
+    bool isInterestingChar(char c);
+    void process_keys(uint32_t targetID, char character, keyStatus status,
+                      uint16_t modifierKeysBitMask);
+
+    class LogEntry {
+      public:
+        LogEntry(char character, keyStatus status, uint16_t modifierKeysBitMask)
+            : character(character), status(status),
+              modifierKeysBitMask(modifierKeysBitMask) {}
+        char character;
+        keyStatus status;
+        uint16_t modifierKeysBitMask;
+    };
+
   private:
     std::thread networkingThread;
     bool networkLoop;
